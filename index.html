@@ -1,0 +1,99 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<title>Data Visualization</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.css">
+  <link rel="stylesheet" href="css/styles.css?v=1.0">
+  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  
+  
+</head>
+<body>
+	<h1>Fast Food</h1>
+
+	<div id="map"></div>
+<div id="sidebar">
+    <h2>Which food chain brand fails fails health inspection?</h2>
+    <svg width="500" height="400"></svg>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+var svg = d3.select("svg"),
+    margin = {top: 10, right: 20, bottom: 150, left: 30},
+    width = +svg.attr("width") - margin.left - margin.right,
+    height = +svg.attr("height") - margin.top - margin.bottom;
+
+var x = d3.scaleBand().rangeRound([0, width]).padding(0.4),
+    y = d3.scaleLinear().rangeRound([height, 0]);
+
+var g = svg.append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.csv("data/bar-data.csv", function(d) {
+  d.result = +d.result;
+  return d;
+}, function(error, data) {
+  if (error) throw error;
+
+  x.domain(data.map(function(d) { return d.business; }));
+  y.domain([0, d3.max(data, function(d) { return d.result; })]);
+
+  g.append("g")
+      .attr("class", "axis axis--x")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+    .attr("y", 0)
+    .attr("x", 8)
+    .attr("dy", ".3em")
+    .attr("transform", "rotate(90)")
+    .style("text-anchor", "start")
+    .style("font-size","8px");
+
+
+  g.append("g")
+      .attr("class", "axis axis--y")
+      .call(d3.axisLeft(y).ticks(10,))
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", "0.71em")
+      .attr("text-anchor", "end")
+      .text("Frequency");
+
+  g.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.business); })
+      .attr("y", function(d) { return y(d.result); })
+      .attr("width", x.bandwidth())
+      .attr("height", function(d) { return height - y(d.result); });
+});
+</script>
+
+	<style>
+		body {
+		  overflow: hidden;
+		  margin: 0;
+		  font-size: 14px;
+		  font-family: "Helvetica Neue", Helvetica;
+		}
+
+		}	
+	</style>
+  </div>
+
+
+ <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+ <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+ <script src="http://d3js.org/d3.v3.min.js"></script>
+ <script src="js/districts.js"></script>
+ <script src="js/fast_rest.js"></script>
+ <script src="js/scripts.js"></script>
+
+
+</body>
+
+</html>
