@@ -1,6 +1,6 @@
 // instantiate the map object
 var map = L.map('map').setView([40.735021, -73.994787], 13);
-var chart;
+
 //add a dark basemap from carto's free basemaps
 L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
   maxZoom: 18,
@@ -30,7 +30,6 @@ function highlightFeature(e) {
         dashArray: '',
         fillOpacity: 0
     });
-    
     if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
         layer.bringToFront();
 
@@ -40,7 +39,7 @@ function highlightFeature(e) {
 
 function resetHighlight(e) {
   var geojson;
-  geojson = L.geoJson(communityDistricts);
+  geojson = L.geoJson(fast_rest);
   geojson.resetStyle(e.target);
   info.update();
 }
